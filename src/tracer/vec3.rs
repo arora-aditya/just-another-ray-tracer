@@ -1,6 +1,3 @@
-// #include <iostream>
-// #include <math.h>
-// #include <stdlib.h>
 use std::ops::Index;
 use std::ops::Add;
 use std::ops::AddAssign;
@@ -10,7 +7,6 @@ use std::ops::Mul;
 use std::ops::MulAssign;
 use std::ops::Div;
 use std::ops::DivAssign;
-// use std::ops::Index;
 use std::fmt;
 
 

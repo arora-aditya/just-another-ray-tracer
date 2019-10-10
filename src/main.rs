@@ -1,4 +1,5 @@
-mod vec3;
+// mod ray;
+mod tracer;
 
 fn ppm_test(){
     let mut nx: u32 = 200;
@@ -25,9 +26,9 @@ fn ppm_test(){
 }
 
 fn vec_test(){
-    let mut v1 = vec3::Vec3 { e: [0.0,1.0,2.0] };
+    let mut v1 = tracer::vec3::Vec3 { e: [0.0,1.0,2.0] };
     println!("v1: {}", v1);
-    let v2 = vec3::Vec3 { e: [10.0,11.0,12.0] };
+    let v2 = tracer::vec3::Vec3 { e: [10.0,11.0,12.0] };
     println!("v2: {}", v2);
     println!("{} {} {}", v1.x(), v1.y(), v1.z());
     println!("{} {} {}", -v1.x(), -v1.y(), -v1.z());
@@ -47,7 +48,7 @@ fn vec_test(){
     v1/=v2;
     println!("v1/=v2 {}", v1);
     v1*=v2;
-    println!("v1 x v2 {}", vec3::cross(v1, v2));
+    println!("v1 x v2 {}", tracer::vec3::cross(v1, v2));
     v1.make_unit_vector();
     println!("unit v1 {}", v1);
 }
