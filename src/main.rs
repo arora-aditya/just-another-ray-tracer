@@ -1,6 +1,6 @@
 mod tests;
 mod tracer;
-// mod objects;
+mod objects;
 
 fn main() {
     // tests::ppm_test();
@@ -8,5 +8,6 @@ fn main() {
     // tests::ray_test();
     // tests::blue_shader();
     // tests::blue_shader_with_sphere();
-    tests::blue_shader_with_sphere_shading();
+    // tests::blue_shader_with_sphere_shading();
+    tests::blue_shader_with_2_sphere_shading();
 }

@@ -1,5 +1,9 @@
 use crate::tracer::ray as ray;
-use crate::tracer::vec3 as vec3;
+use crate::tracer::vec3::{self, Vec3};
+use crate::objects::hittable_list;
+use crate::objects::hittable;
+use crate::objects::sphere::Sphere;
+use crate::objects::hittable::Hittable;
 
 pub fn ppm_test(){
     let nx: u32 = 200;
@@ -188,6 +192,77 @@ pub fn blue_shader_with_sphere_shading(){
             let v = j as f32 / ny as f32;
             let r = ray::Ray{a: origin, b: lower_left_corner + u*horizontal + v*vertical};
             let col = color(r);
+            let ir: u32 = (255.99*col[0]) as u32;
+            let ig: u32 = (255.99*col[1]) as u32;
+            let ib: u32 = (255.99*col[2]) as u32;
+            println!("{} {} {}", ir, ig, ib);
+            // std::cout << ir << " " << ig << " " << ib << "\n";
+            i += 1;
+        }
+        j -= 1;
+    }
+}
+
+pub fn blue_shader_with_2_sphere_shading(){
+    pub fn hit_sphere(center: vec3::Vec3, radius: f32, r: ray::Ray) -> f32 {
+        let oc: vec3::Vec3 = r.origin() - center;
+        let a: f32 = vec3::dot(r.direction(), r.direction());
+        let b: f32 = 2.0 * vec3::dot(oc, r.direction());
+        let c: f32 = vec3::dot(oc, oc) - radius*radius;
+        let discriminant: f32 = b*b - 4.0*a*c;
+        if discriminant < 0.0 {
+            return -1.0;
+        }
+        else {
+            return (-b - discriminant.sqrt()) / (2.0*a);
+        }
+    }
+    
+    pub fn color(r1: ray::Ray, world: hittable_list::HittableList) -> vec3::Vec3{
+        let mut rec: hittable::HitRecord = hittable::HitRecord {
+                t: 0.0,
+                p: Vec3{e: [0.0,0.0,0.0]},
+                normal: Vec3{e: [0.0,0.0,0.0]},
+                hit: false,
+            };
+        rec = world.hit(r1, 0.0, std::f32::INFINITY, rec);
+        if rec.hit {
+            return 0.5*vec3::Vec3{e: [rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0]};
+        } else {
+            let unit_direction = vec3::Vec3::unit_vector(r1.direction());
+            let t: f32 = (unit_direction.y() + 1.0)*0.5;
+            return vec3::Vec3{e: [1.0, 1.0, 1.0]}*(1.0-t) + vec3::Vec3{e: [0.5, 0.7, 1.0]}*t;
+        }
+    }
+    
+    let nx: i32 = 200;
+    let ny: i32 = 100;
+    
+    println!("P3\n{} {}\n255", nx, ny);
+    
+    let lower_left_corner = vec3::Vec3 {e: [-2.0, -1.0, -1.0]};
+    let horizontal = vec3::Vec3 {e: [4.0, 0.0, 0.0]};
+    let vertical = vec3::Vec3 {e: [0.0, 2.0, 0.0]};
+    let origin = vec3::Vec3 {e: [0.0, 0.0, 0.0]};
+    
+
+     let world = hittable_list::HittableList{
+                list: vec![
+                        Box::new(Sphere{center: Vec3{e: [0.0,0.0,-1.0]}, radius: 0.5}),
+                        Box::new(Sphere{center: Vec3{e: [0.0,-100.5,-1.0]}, radius: 100.0}),
+                        ]
+            };
+
+    
+    let mut j: i32 = ny - 1;
+    while j > 0 {
+        let mut i: i32 = 0;
+        while i < nx {
+            let u = i as f32 / nx as f32;
+            let v = j as f32 / ny as f32;
+            let r = ray::Ray{a: origin, b: lower_left_corner + u*horizontal + v*vertical};
+            let p: Vec3 = r.point_at_parameter(2.0);
+            let col = color(r, world);
             let ir: u32 = (255.99*col[0]) as u32;
             let ig: u32 = (255.99*col[1]) as u32;
             let ib: u32 = (255.99*col[2]) as u32;
