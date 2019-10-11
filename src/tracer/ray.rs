@@ -1,8 +1,8 @@
 use std::fmt;
 
-#[path = "vec3.rs"]
-pub mod vec3;
+use crate::tracer::vec3;
 
+#[derive(Copy, Clone)]
 pub struct Ray {
     pub a: vec3::Vec3,
     pub b: vec3::Vec3,
