@@ -1,6 +1,3 @@
-// #include <iostream>
-// #include <math.h>
-// #include <stdlib.h>
 use std::ops::Index;
 use std::ops::Add;
 use std::ops::AddAssign;
@@ -10,7 +7,6 @@ use std::ops::Mul;
 use std::ops::MulAssign;
 use std::ops::Div;
 use std::ops::DivAssign;
-// use std::ops::Index;
 use std::fmt;
 
 
@@ -143,6 +139,15 @@ impl Mul<f32> for Vec3 {
     fn mul(self, t: f32) -> Self {
         Self{
             e: [self.e[0] * t, self.e[1] * t, self.e[2] * t]
+        }
+    }
+}
+
+impl Mul<Vec3> for f32 {
+    type Output = Vec3;
+    fn mul(self, t: Vec3) -> Vec3 {
+        Vec3{
+            e: [self * t.e[0], self * t.e[1], self * t.e[2]]
         }
     }
 }
