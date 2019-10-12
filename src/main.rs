@@ -13,5 +13,6 @@ fn main() {
     // render::blue_shader_with_sphere();
     // render::blue_shader_with_sphere_shading();
     // render::blue_shader_with_2_sphere_shading();
-    render::blue_shader_with_2_sphere_shading_with_anti_aliasing();
+    // render::blue_shader_with_2_sphere_shading_with_anti_aliasing();
+    render::diffused_shader_with_2_spheres();
 }

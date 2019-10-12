@@ -1,10 +1,15 @@
-use std::ops::{Add, AddAssign, DivAssign, Mul};
+use std::ops::{Add, AddAssign, DivAssign, Mul, MulAssign};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Color3 {
     pub r: f32,
     pub g: f32,
     pub b: f32
+}
+
+fn g2_color_elem_to_int(f: f32) -> i32 {
+    // for gamma 2 encoding
+    (255.99f32 * f.sqrt()) as i32
 }
 
 fn color_elem_to_int(f: f32) -> i32 {
@@ -22,6 +27,21 @@ impl Color3 {
 
     pub fn ib(&self) -> i32 {
         color_elem_to_int(self.b)
+    }
+    
+    pub fn g2_ir(&self) -> i32 {
+        // for gamma 2 encoding
+        g2_color_elem_to_int(self.r)
+    }
+
+    pub fn g2_ig(&self) -> i32 {
+        // for gamma 2 encoding
+        g2_color_elem_to_int(self.g)
+    }
+
+    pub fn g2_ib(&self) -> i32 {
+        // for gamma 2 encoding
+        g2_color_elem_to_int(self.b)
     }
 }
 
@@ -60,6 +80,14 @@ impl DivAssign<f32> for Color3 {
             g: self.g/other, 
             b: self.b/other,
         };
+    }
+}
+
+impl Mul<f32> for Color3 {
+    type Output = Color3;
+
+    fn mul(self, rhs: f32) -> Self::Output {
+        Color3{r: self.r * rhs, g: self.g * rhs, b: self.b * rhs}
     }
 }
 

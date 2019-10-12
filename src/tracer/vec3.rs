@@ -1,3 +1,4 @@
+use std::default::Default;
 use std::ops::Index;
 use std::ops::Add;
 use std::ops::AddAssign;
@@ -13,6 +14,14 @@ use std::fmt;
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
     pub e: [f32; 3],
+}
+
+impl Default for Vec3 {
+    fn default() -> Self { 
+        Self {
+            e: [1.0, 1.0, 1.0],
+        }
+    }
 }
 
 impl Vec3 {

@@ -3,7 +3,7 @@ use rand::prelude::*;
 
 pub struct Random {
     seed:  [u8; 32],
-    rng: rand::rngs::StdRng
+    pub rng: rand::rngs::StdRng
 }
 
 impl Default for Random {
