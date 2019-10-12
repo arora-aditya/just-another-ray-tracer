@@ -29,7 +29,6 @@ publish:
 	@$(CARGO) publish
 
 run: build
-	echo $(SOURCES)
 	./target/debug/ray-tracing-in-a-weekend
 
 tofile: build
