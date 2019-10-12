@@ -1,6 +1,8 @@
 mod render;
 mod tracer;
 mod objects;
+mod camera;
+mod utils;
 
 fn main() {
     // render::ppm_test();
@@ -9,5 +11,6 @@ fn main() {
     // render::blue_shader();
     // render::blue_shader_with_sphere();
     // render::blue_shader_with_sphere_shading();
-    render::blue_shader_with_2_sphere_shading();
+    // render::blue_shader_with_2_sphere_shading();
+    render::blue_shader_with_2_sphere_shading_with_anti_aliasing();
 }

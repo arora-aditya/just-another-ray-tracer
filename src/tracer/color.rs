@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul};
+use std::ops::{Add, AddAssign, DivAssign, Mul};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Color3 {
@@ -30,6 +30,36 @@ impl Add for &Color3 {
 
     fn add(self, rhs: Self) -> Self::Output {
         Color3{r: self.r + rhs.r, g: self.g + rhs.g, b: self.b + rhs.b}
+    }
+}
+
+impl AddAssign for Color3 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            r: self.r + other.r,
+            g: self.g + other.g, 
+            b: self.b + other.b,
+        };
+    }
+}
+
+impl DivAssign<i32> for Color3 {
+    fn div_assign(&mut self, other: i32) {
+        *self = Color3 {
+            r: self.r/other as f32,
+            g: self.g/other as f32, 
+            b: self.b/other as f32,
+        };
+    }
+}
+
+impl DivAssign<f32> for Color3 {
+    fn div_assign(&mut self, other: f32) {
+        *self = Color3 {
+            r: self.r/other,
+            g: self.g/other, 
+            b: self.b/other,
+        };
     }
 }
 
