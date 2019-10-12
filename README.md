@@ -4,4 +4,4 @@ following [this guide](https://raytracing.github.io/books/RayTracingInOneWeekend
 
 ### Progress:
 
-![current_progress](./outputs/4_blue_shader_with_sphere_shading.png)
+![current_progress](./outputs/5_blue_shader_with_2_sphere_shading.png)
