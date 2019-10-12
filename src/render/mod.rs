@@ -1,6 +1,10 @@
-use crate::tracer::ray as ray;
+use std::io;
+use std::io::Write;
+
+use crate::tracer::ray::{self, Ray};
 use crate::tracer::vec3::{self, Vec3};
-use crate::objects::hittable_list;
+use crate::tracer::color::Color3;
+use crate::objects::hittable_list::HittableList;
 use crate::objects::hittable;
 use crate::objects::sphere::Sphere;
 use crate::objects::hittable::Hittable;
@@ -204,71 +208,46 @@ pub fn blue_shader_with_sphere_shading(){
 }
 
 pub fn blue_shader_with_2_sphere_shading(){
-    pub fn hit_sphere(center: vec3::Vec3, radius: f32, r: ray::Ray) -> f32 {
-        let oc: vec3::Vec3 = r.origin() - center;
-        let a: f32 = vec3::dot(r.direction(), r.direction());
-        let b: f32 = 2.0 * vec3::dot(oc, r.direction());
-        let c: f32 = vec3::dot(oc, oc) - radius*radius;
-        let discriminant: f32 = b*b - 4.0*a*c;
-        if discriminant < 0.0 {
-            return -1.0;
-        }
-        else {
-            return (-b - discriminant.sqrt()) / (2.0*a);
-        }
-    }
-    
-    pub fn color(r1: ray::Ray, world: hittable_list::HittableList) -> vec3::Vec3{
-        let mut rec: hittable::HitRecord = hittable::HitRecord {
-                t: 0.0,
-                p: Vec3{e: [0.0,0.0,0.0]},
-                normal: Vec3{e: [0.0,0.0,0.0]},
-                hit: false,
-            };
-        rec = world.hit(r1, 0.0, std::f32::INFINITY, rec);
-        if rec.hit {
-            return 0.5*vec3::Vec3{e: [rec.normal.x() + 1.0, rec.normal.y() + 1.0, rec.normal.z() + 1.0]};
+    pub fn color<H: Hittable>(r: &Ray, hitable: &H) -> Color3 {
+        if let Some(hit_record) = hitable.hit(r, 0.0, std::f32::MAX) {
+            &Color3 {
+                r: hit_record.normal.x() + 1.0,
+                g: hit_record.normal.y() + 1.0,
+                b: hit_record.normal.z() + 1.0,
+            } * 0.5
         } else {
-            let unit_direction = vec3::Vec3::unit_vector(r1.direction());
-            let t: f32 = (unit_direction.y() + 1.0)*0.5;
-            return vec3::Vec3{e: [1.0, 1.0, 1.0]}*(1.0-t) + vec3::Vec3{e: [0.5, 0.7, 1.0]}*t;
+            let unit_direction : Vec3 = r.direction().unit_vector();
+            let t              : f32  = 0.5 * (unit_direction.y() + 1.0);
+            &(&Color3 { r: 1.0, g: 1.0, b: 1.0 } * (1.0 - t)) + &(&Color3 {r: 0.5, g: 0.7, b: 1.0} * t)
         }
     }
     
+    let mut writer = io::BufWriter::new(io::stdout());
+
     let nx: i32 = 200;
     let ny: i32 = 100;
-    
-    println!("P3\n{} {}\n255", nx, ny);
-    
-    let lower_left_corner = vec3::Vec3 {e: [-2.0, -1.0, -1.0]};
-    let horizontal = vec3::Vec3 {e: [4.0, 0.0, 0.0]};
-    let vertical = vec3::Vec3 {e: [0.0, 2.0, 0.0]};
-    let origin = vec3::Vec3 {e: [0.0, 0.0, 0.0]};
-    
+    writer.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes()).unwrap();
 
-     let world = hittable_list::HittableList{
-                list: vec![
-                        Box::new(Sphere{center: Vec3{e: [0.0,0.0,-1.0]}, radius: 0.5}),
-                        Box::new(Sphere{center: Vec3{e: [0.0,-100.5,-1.0]}, radius: 100.0}),
-                        ]
+    let lower_left_corner : Vec3 = Vec3{e: [-2.0, -1.0, -1.0]};
+    let horizontal        : Vec3 = Vec3{e: [4.0, 0.0, 0.0]};
+    let vertical          : Vec3 = Vec3{e: [0.0, 2.0, 0.0]};
+    let origin            : Vec3 = Vec3{e: [0.0, 0.0, 0.0]};
+    let hitable           = HittableList { hitables: vec![
+        Sphere {center: Vec3{e: [0.0, 0.0, -1.0]}, radius: 0.5},
+        Sphere {center: Vec3{e: [0.0, -100.5, -1.0]}, radius: 100.0},
+    ]};
+    let mut j = ny - 1;
+    while j >= 0 {
+        for i in 0..nx {
+            let u: f32 = i as f32 / nx as f32;
+            let v: f32 = j as f32 / ny as f32;
+            let r: Ray = Ray{
+                a: origin,
+                b: (lower_left_corner + (horizontal * u)) + (vertical * v)
             };
 
-    
-    let mut j: i32 = ny - 1;
-    while j > 0 {
-        let mut i: i32 = 0;
-        while i < nx {
-            let u = i as f32 / nx as f32;
-            let v = j as f32 / ny as f32;
-            let r = ray::Ray{a: origin, b: lower_left_corner + u*horizontal + v*vertical};
-            let p: Vec3 = r.point_at_parameter(2.0);
-            let col = color(r, world);
-            let ir: u32 = (255.99*col[0]) as u32;
-            let ig: u32 = (255.99*col[1]) as u32;
-            let ib: u32 = (255.99*col[2]) as u32;
-            println!("{} {} {}", ir, ig, ib);
-            // std::cout << ir << " " << ig << " " << ib << "\n";
-            i += 1;
+            let col: Color3 = color(&r, &hitable);
+            writer.write_all(format!("{} {} {}\n", col.ir(), col.ig(), col.ib()).as_bytes()).unwrap();
         }
         j -= 1;
     }
