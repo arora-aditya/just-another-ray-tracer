@@ -2,6 +2,7 @@ use std::io;
 use std::io::Write;
 
 use crate::utils;
+
 use crate::tracer::ray::{self, Ray};
 use crate::tracer::vec3::{self, Vec3};
 use crate::tracer::color::Color3;
@@ -236,7 +237,6 @@ pub fn blue_shader_with_2_sphere_shading(){
     let origin            : Vec3 = Vec3{e: [0.0, 0.0, 0.0]};
     let hitable           = HittableList { hitables: vec![
         Sphere {center: Vec3{e: [0.0, 0.0, -1.0]}, radius: 0.5},
-        Sphere {center: Vec3{e: [0.5, -1.0, -1.0]}, radius: 1.0},
         Sphere {center: Vec3{e: [0.0, -100.5, -1.0]}, radius: 100.0},
     ]};
     let mut j = ny - 1;

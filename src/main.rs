@@ -4,6 +4,7 @@ mod objects;
 mod camera;
 mod utils;
 
+
 fn main() {
     // render::ppm_test();
     // render::vec_test();
