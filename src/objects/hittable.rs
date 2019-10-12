@@ -1,14 +1,16 @@
 use crate::tracer::vec3::Vec3;
 use crate::tracer::ray as ray;
+use crate::objects::material::Material;
 
 #[derive(Copy, Clone)]
-pub struct HitRecord {
+pub struct HitRecord<'a> {
     pub t: f32,
     pub p: Vec3,
     pub normal: Vec3,
+    pub material: &'a dyn Material,
 }
 
-impl HitRecord {
+impl<'a> HitRecord<'a> {
     pub fn zero(&mut self) {
         self.t = 0.0;
         self.p = Vec3{e: [0.0,0.0,0.0]};
