@@ -9,7 +9,7 @@ pub struct HitRecord {
 }
 
 impl HitRecord {
-    pub fn zero(&self) {
+    pub fn zero(&mut self) {
         self.t = 0.0;
         self.p = Vec3{e: [0.0,0.0,0.0]};
         self.normal = Vec3{e: [0.0,0.0,0.0]};
@@ -17,5 +17,5 @@ impl HitRecord {
 }
 
 pub trait Hittable  {
-    fn hit(&self, r: ray::Ray, t_min: f32, t_max: f32, rec: crate::objects::hittable::HitRecord) -> bool;
+    fn hit(&self, r: &ray::Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
 }

@@ -1,23 +1,21 @@
-use crate::tracer::ray;
-use crate::objects::hittable;
+use crate::tracer::ray::Ray;
+use crate::objects::hittable::Hittable;
+use crate::objects::hittable::HitRecord;
 
-struct HittableList {
-    list: std::vec::Vec<Box<dyn hittable::Hittable>>
+pub struct HittableList<H: Hittable> {
+    pub hitables: std::vec::Vec<H>
 }
 
-impl hittable::Hittable for HittableList {
-    fn hit(&self, r: ray::Ray, t_min: f32, t_max: f32, rec: hittable::HitRecord) -> bool {
-        let mut temp_rec: hittable::HitRecord;
-        temp_rec.zero();
-        let mut hit_anything: bool = false;
+impl<H: Hittable> Hittable for HittableList<H> {
+    fn hit(&self, r: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut closest_so_far: f32 = t_max;
-        for hittable_ in self.list {
-            if hittable_.hit(r, t_min, closest_so_far, temp_rec) {
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
+        let mut hit_record_opt: Option<HitRecord> = None;
+        for hitable in &self.hitables {
+            if let Some(hit_record) = hitable.hit(r, t_min, closest_so_far) {
+                closest_so_far = hit_record.t;
+                hit_record_opt = Some(hit_record);
             }
         }
-        hit_anything
+        hit_record_opt
     }
 }
