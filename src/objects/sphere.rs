@@ -2,7 +2,7 @@ use crate::objects::hittable::HitRecord;
 use crate::objects::hittable::Hittable;
 use crate::tracer::vec3::{self, Vec3};
 use crate::tracer::ray::Ray;
-use crate::objects::material::Material;
+use crate::material::base::Material;
 
 pub struct Sphere<'a> {
     pub center: Vec3,

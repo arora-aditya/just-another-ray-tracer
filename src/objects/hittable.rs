@@ -1,6 +1,6 @@
 use crate::tracer::vec3::Vec3;
 use crate::tracer::ray as ray;
-use crate::objects::material::Material;
+use crate::material::base::Material;
 
 #[derive(Copy, Clone)]
 pub struct HitRecord<'a> {
