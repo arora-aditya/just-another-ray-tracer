@@ -4,5 +4,5 @@ following [this guide](https://raytracing.github.io/books/RayTracingInOneWeekend
 
 ### Progress:
 
-![current_progress](./outputs/book_cover_large.png)
+![current_progress](./outputs/book_cover_large_2.png)
 
