@@ -70,6 +70,10 @@ impl Vec3 {
     }
 }
 
+pub fn new(x: i32, y: i32, z: i32) -> Vec3 {
+    Vec3{e: [x as f32, y as f32, z as f32]}
+}
+
 pub fn dot(v1: Vec3, v2: Vec3) -> f32 {
     return v1.e[0]*v2.e[0]
          + v1.e[1]*v2.e[1]
