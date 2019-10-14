@@ -19,5 +19,6 @@ fn main() {
     // render::diffused_shader_with_2_spheres();
     // render::material_diffused_shader_with_3_spheres();
     // render::dielectric_with_3_spheres();
-    render::change_camera_dielectric_with_2_spheres();
+    // render::change_camera_dielectric_with_2_spheres();
+    render::book_cover();
 }

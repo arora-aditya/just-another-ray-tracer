@@ -32,3 +32,42 @@ impl fmt::Display for Ray {
         write!(f, "a: {} b:{}", self.a, self.b)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::vec3;
+    use super::Ray;
+
+    #[test]
+    fn point_at_parameter_test() {
+        assert_eq!(
+            Ray {
+                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
+                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+            }.point_at_parameter(4.0),
+            vec3::Vec3{e: [17.0, 20.0, 26.0]}
+        );
+    }
+    
+    #[test]
+    fn origin_test() {
+        assert_eq!(
+            Ray {
+                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
+                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+            }.origin(),
+            vec3::Vec3{e: [1.0, 0.0, 2.0]}
+        );
+    }
+    
+    #[test]
+    fn direction_test() {
+        assert_eq!(
+            Ray {
+                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
+                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+            }.direction(),
+            vec3::Vec3{e: [4.0, 5.0, 6.0]}
+        );
+    }
+}

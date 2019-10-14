@@ -6,12 +6,12 @@ use std::ops::Sub;
 use std::ops::SubAssign;
 use std::ops::Mul;
 use std::ops::MulAssign;
+use std::ops::Neg;
 use std::ops::Div;
 use std::ops::DivAssign;
 use std::fmt;
 
-
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
     pub e: [f32; 3],
 }
@@ -106,6 +106,14 @@ impl Index<u32> for Vec3 {
     type Output = f32;
     fn index(&self, i: u32) -> &f32 {
         &self.e[i as usize]
+    }
+}
+
+impl Neg for Vec3 {
+    type Output = Vec3;
+
+    fn neg(self) -> Self::Output {
+        -1.0 * self
     }
 }
 
@@ -224,55 +232,39 @@ mod test {
     fn add() {
         assert_eq!(
             Vec3 {
-                x: 1.0,
-                y: 0.0,
-                z: 2.0
+                e: [1.0, 0.0, 2.0],
             } + Vec3 {
-                x: 2.0,
-                y: 1.0,
-                z: 2.0
+                e: [2.0, 1.0, 2.0]
             },
             Vec3 {
-                x: 3.0,
-                y: 1.0,
-                z: 4.0
+                e: [3.0, 1.0, 4.0]
             }
         );
     }
 
     #[test]
-    fn cross() {
+    fn cross_test() {
         assert_eq!(
+            super::cross(Vec3 {
+                e: [2.0, 1.0, 2.0]
+            },
             Vec3 {
-                x: 1.0,
-                y: 0.0,
-                z: 2.0
-            }
-            .cross(Vec3 {
-                x: 2.0,
-                y: 1.0,
-                z: 2.0
+                e: [1.0, 0.0, 2.0]
             }),
             Vec3 {
-                x: -2.0,
-                y: 2.0,
-                z: 1.0
+                e: [2.0, -2.0, -1.0]
             }
         );
     }
 
     #[test]
-    fn dot() {
+    fn dot_test() {
         assert_eq!(
+            super::dot(Vec3 {
+                e: [2.0, 1.0, 2.0]
+            },
             Vec3 {
-                x: 1.0,
-                y: 0.0,
-                z: 2.0
-            }
-            .dot(Vec3 {
-                x: 2.0,
-                y: 1.0,
-                z: 2.0
+                e: [1.0, 0.0, 2.0],
             }),
             6.0
         );
@@ -281,14 +273,10 @@ mod test {
     #[test]
     fn length() {
         let v = Vec3 {
-            x: -2.0,
-            y: -2.0,
-            z: -1.0,
+            e: [-2.0, -2.0, 1.0]
         };
         let u = Vec3 {
-            x: 0.0,
-            y: 0.0,
-            z: -1.0,
+            e: [0.0, 1.0, 0.0]
         };
         assert_eq!(v.length(), 3.0);
         assert_eq!(u.length(), 1.0);
@@ -297,14 +285,10 @@ mod test {
     #[test]
     fn squared_length() {
         let v = Vec3 {
-            x: -2.0,
-            y: -2.0,
-            z: -1.0,
+            e: [-2.0, -2.0, 1.0]
         };
         let u = Vec3 {
-            x: 0.0,
-            y: 0.0,
-            z: -1.0,
+            e: [0.0, 1.0, 0.0]
         };
         assert_eq!(v.squared_length(), 9.0);
         assert_eq!(u.squared_length(), 1.0);
@@ -314,14 +298,10 @@ mod test {
     fn mul() {
         assert_eq!(
             3.0 * Vec3 {
-                x: 1.0,
-                y: 2.0,
-                z: 3.0
+                e: [1.0, 2.0, 3.0]
             },
             Vec3 {
-                x: 3.0,
-                y: 6.0,
-                z: 9.0
+                e: [3.0, 6.0, 9.0]
             }
         );
     }
@@ -330,14 +310,10 @@ mod test {
     fn neg() {
         assert_eq!(
             -Vec3 {
-                x: 1.0,
-                y: -2.0,
-                z: 3.0
+                e: [1.0, -2.0, 3.0]
             },
             Vec3 {
-                x: -1.0,
-                y: 2.0,
-                z: -3.0
+                e: [-1.0, 2.0, -3.0]
             }
         );
     }
@@ -346,18 +322,12 @@ mod test {
     fn sub() {
         assert_eq!(
             Vec3 {
-                x: 1.0,
-                y: 0.0,
-                z: 2.0
+                e: [1.0, 0.0, 2.0]
             } - Vec3 {
-                x: 2.0,
-                y: 1.0,
-                z: 2.0
+                e: [2.0, 1.0, 2.0]
             },
             Vec3 {
-                x: -1.0,
-                y: -1.0,
-                z: 0.0
+                e: [-1.0, -1.0, 0.0]
             }
         );
     }
