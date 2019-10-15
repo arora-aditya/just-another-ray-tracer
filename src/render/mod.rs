@@ -142,8 +142,8 @@ pub fn book_cover(){
     
     let mut writer = io::BufWriter::new(io::stdout());
 
-    let nx: i32 = 800;
-    let ny: i32 = 400;
+    let nx: i32 = 1500;
+    let ny: i32 = 750;
     let ns: i32 = 100;
     writer.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes()).unwrap();
     
