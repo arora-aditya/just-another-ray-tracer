@@ -4,5 +4,10 @@ following [this guide](https://raytracing.github.io/books/RayTracingInOneWeekend
 
 ### Progress:
 
-![current_progress](./outputs/book_cover_large_2.png)
+![current_progress](./outputs/test_2.png)
 
+#### Pending further improvements
+- [ ] Multi threading
+- [ ] Motion blur
+- [ ] Textures
+- [ ] Boxes
