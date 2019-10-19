@@ -13,6 +13,8 @@ pub struct Camera {
     pub v: Vec3,
     pub w: Vec3,
     pub lens_radius: f32,
+    pub time0: f32, 
+    pub time1: f32,
 }
 
 impl Default for Camera {
@@ -26,6 +28,8 @@ impl Default for Camera {
             v: Vec3{e: [0.0, 0.0, 0.0]},
             w: Vec3{e: [0.0, 0.0, 0.0]},
             lens_radius: 0.0,
+            time0: 0.0,
+            time1: 0.0,
         }
     }
 }
@@ -39,6 +43,8 @@ impl Camera {
             aspect: f32,
             aperture: f32, 
             focus_dist: f32,
+            t0: f32, 
+            t1: f32,
         ) -> Camera {
         let w: Vec3 = (lookfrom - lookat).unit_vector();
         let u: Vec3 = (vec3::cross(vup, w)).unit_vector();
@@ -59,12 +65,15 @@ impl Camera {
             u: u,
             v: v,
             w: w,
+            time0: t0,
+            time1: t1,
         }
         
     }
     pub fn get_ray(&self, u: f32, v: f32, random: &mut Random) -> Ray {
         let rd : Vec3 = self.lens_radius*random_in_unit_disk(random);
         let offset: Vec3 = self.u * rd.x() + self.v * rd.y();
-        return Ray{a: self.origin + offset, b: (self.lower_left_corner + u*self.horizontal) + v*self.vertical - self.origin - offset};
+        let time: f32 = self.time0 + random.f32()*(self.time1-self.time0);
+        return Ray{a: self.origin + offset, b: (self.lower_left_corner + u*self.horizontal) + v*self.vertical - self.origin - offset, _time:time};
     }
 }

@@ -4,10 +4,10 @@ following [this guide](https://raytracing.github.io/books/RayTracingInOneWeekend
 
 ### Progress:
 
-![current_progress](./outputs/test_2.png)
+![current_progress](./outputs/the_next/01_moving_sphere.png)
 
 #### Pending further improvements
 - [ ] Multi threading
-- [ ] Motion blur
+- [x] Motion blur
 - [ ] Textures
 - [ ] Boxes
