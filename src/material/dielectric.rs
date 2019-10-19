@@ -61,13 +61,21 @@ impl Material for DielectricMaterial {
                 Some(refracted) if reflect_prob <= r => {
                     Some(ScatterRecord {
                         attenuation,
-                        scattered: Ray{a: hit_record.p, b: refracted}
+                        scattered: Ray{
+                            a: hit_record.p, 
+                            b: refracted,
+                            _time: r_in.time(),
+                        }
                     })
                 },
                 _ => {
                    Some(ScatterRecord {
                         attenuation,
-                        scattered: Ray{a: hit_record.p, b: reflected}
+                        scattered: Ray{
+                            a: hit_record.p, 
+                            b: reflected,
+                            _time: r_in.time(),
+                        }
                     })
                 }
             }

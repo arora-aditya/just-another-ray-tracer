@@ -15,7 +15,9 @@ impl Material for LambertMaterial {
         let target: Vec3 = (hit_record.p + hit_record.normal) + utils::random_in_unit_sphere(&mut random);
         Some(ScatterRecord {
             attenuation: self.albedo,
-            scattered: Ray{a: hit_record.p, b: target - hit_record.p}
+            scattered: Ray{a: hit_record.p, b: target - hit_record.p, 
+                _time: _r_in.time(),
+            }
         })
     }
 }

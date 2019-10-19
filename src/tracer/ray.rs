@@ -6,6 +6,7 @@ use crate::tracer::vec3;
 pub struct Ray {
     pub a: vec3::Vec3,
     pub b: vec3::Vec3,
+    pub _time: f32,
 }
 
 impl Ray {
@@ -19,6 +20,10 @@ impl Ray {
     
     pub fn point_at_parameter(&self, t: f32) -> vec3::Vec3 {
         self.a + self.b*t
+    }
+    
+    pub fn time(&self) -> f32 {
+        self._time
     }
 }
 

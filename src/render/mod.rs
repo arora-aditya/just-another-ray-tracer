@@ -12,20 +12,20 @@ use crate::material;
 use crate::material::metal::MetalMaterial;
 use crate::material::lambert::LambertMaterial;
 use crate::material::dielectric::DielectricMaterial;
-use crate::objects::sphere::Sphere;
+use crate::objects::sphere::{Sphere, MovingSphere, SphereThing};
 use crate::objects::hittable::Hittable;
 use crate::camera::camera::{self, Camera};
 
-pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
+pub fn random_hitable(random: &mut utils::Random) -> HittableList<SphereThing> {
     let n: i32 = 500;
-    let mut list: Vec<Sphere> = std::vec::Vec::new();
-    list.push(Sphere {
+    let mut list: Vec<SphereThing> = std::vec::Vec::new();
+    list.push(SphereThing::Fixed(Sphere {
         center: Vec3{e: [0.0, -1000.0, 0.0]}, 
         radius: 1000.0,
         material: Box::new(LambertMaterial{
             albedo: Color3{r: 0.5, g: 0.5, b: 0.5}
         }),
-    });
+    }));
     let i: i32 = 1;
     for a in -11..11 {
         for b in -11..11 {
@@ -33,8 +33,9 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
             let center: Vec3 = Vec3{e: [(a as f32)+0.9*random.f32(),0.2,(b as f32)+0.9*random.f32()]};
             if ((center-Vec3{e: [4.0,0.2,0.0]}).length() > 0.9) {
                 if choose_mat < 0.8 {  // diffuse
-                    list.push(Sphere{
-                            center: center, 
+                    list.push(SphereThing::Moving(MovingSphere{
+                            center0: center, 
+                            center1: center + Vec3{e: [0.0, 0.5*random.f32(), 0.0]}, 
                             radius: 0.2,
                             material: Box::new(LambertMaterial{
                                 albedo: Color3{
@@ -42,11 +43,13 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
                                             g: random.f32()*random.f32(), 
                                             b: random.f32()*random.f32()
                                         }
-                            })
-                        });
+                            }),
+                            time0: 0.0,
+                            time1: 1.0,
+                        }));
                 }
                 else if choose_mat < 0.95 { // metal
-                    list.push(Sphere{
+                    list.push(SphereThing::Fixed(Sphere{
                             center: center, 
                             radius: 0.2,
                             material: Box::new(MetalMaterial{
@@ -57,29 +60,29 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
                                         },
                                 f: 0.5*random.f32(),
                             }),
-                    });
+                    }));
                 }
                 else {  // glass
-                    list.push(Sphere{
+                    list.push(SphereThing::Fixed(Sphere{
                             center: center, 
                             radius: 0.2,
                             material: Box::new(DielectricMaterial{
                                 ref_idx: 1.5,
                             }),
-                    });
+                    }));
                 }
             }
         }
     }
 
-    list.push(Sphere{
+    list.push(SphereThing::Fixed(Sphere{
             center: vec3::new(0, 1, 0), 
             radius: 1.0,
             material: Box::new(DielectricMaterial{
                 ref_idx: 1.5,
             }),
-    });
-    list.push(Sphere{
+    }));
+    list.push(SphereThing::Fixed(Sphere{
             center: vec3::new(4, 1, 0), 
             radius: 0.2,
             material: Box::new(MetalMaterial{
@@ -90,8 +93,8 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
                         },
                 f: 0.0,
             }),
-    });
-    list.push(Sphere{
+    }));
+    list.push(SphereThing::Fixed(Sphere{
             center: vec3::new(-4, 1, 0), 
             radius: 1.0,
             material: Box::new(LambertMaterial{
@@ -101,7 +104,7 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList<Sphere> {
                             b: 0.1
                         }
             })
-    });
+    }));
 
     return HittableList {
         hitables: list
@@ -142,8 +145,8 @@ pub fn book_cover(){
     
     let mut writer = io::BufWriter::new(io::stdout());
 
-    let nx: i32 = 1500;
-    let ny: i32 = 750;
+    let nx: i32 = 200;
+    let ny: i32 = 100;
     let ns: i32 = 100;
     writer.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes()).unwrap();
     
@@ -162,7 +165,10 @@ pub fn book_cover(){
             20.0, 
             nx as f32/ny as f32, 
             aperture, 
-            dist_to_focus);
+            dist_to_focus,
+            0.0,
+            1.0,
+        );
     let mut j = ny - 1;
     while j >= 0 {
         for i in 0..nx {

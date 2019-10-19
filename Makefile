@@ -1,8 +1,9 @@
 COLOR ?= always # Valid COLOR options: {always, auto, never}
 CARGO = cargo --color $(COLOR)
 SOURCES := $(patsubst %.ppm,%.png,$(wildcard outputs/*.ppm))
+.DEFAULT_GOAL := help
 
-.PHONY: all bench build check clean doc install publish run test update
+.PHONY: all bench build check clean doc install publish run test update help
 
 all: run $(SOURCES)
 	echo $(SOURCES)
@@ -32,7 +33,7 @@ run: build
 	./target/debug/ray-tracing-in-a-weekend
 
 tofile: build
-	./target/debug/ray-tracing-in-a-weekend
+	./target/debug/ray-tracing-in-a-weekend > outputs/the_next/01_moving_sphere.ppm
 
 test: build
 	@$(CARGO) test
@@ -42,3 +43,6 @@ update:
 
 %.png: %.ppm
 	magick convert $< $@
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

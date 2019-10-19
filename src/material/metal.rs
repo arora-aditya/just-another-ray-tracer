@@ -26,7 +26,9 @@ impl Material for MetalMaterial {
         let reflected: Vec3 = reflect(r_in.direction().unit_vector(), hit_record.normal);
         let scattered: Ray  = Ray {
                                 a: hit_record.p, 
-                                b: reflected + (utils::random_in_unit_sphere(random) * self.fuzz())};
+                                b: reflected + (utils::random_in_unit_sphere(random) * self.fuzz()),
+                                _time: r_in.time()
+                            };
         if vec3::dot(scattered.direction(), hit_record.normal) > 0.0 {
             Some(ScatterRecord {
                 attenuation: self.albedo,
