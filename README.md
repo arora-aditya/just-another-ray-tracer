@@ -4,7 +4,7 @@ following [this guide](https://raytracing.github.io/books/RayTracingInOneWeekend
 
 ### Progress:
 
-![current_progress](./outputs/the_next/01_moving_sphere.png)
+![current_progress](./outputs/the_next/01_moving_sphere_hq.png)
 
 #### Pending further improvements
 - [ ] Multi threading
