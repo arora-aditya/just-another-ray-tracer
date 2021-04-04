@@ -41,3 +41,7 @@ Thumbs.db
 
 /target
 **/*.rs.bk
+
+# Outputs #
+###########
+*.ppm
