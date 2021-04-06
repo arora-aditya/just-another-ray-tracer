@@ -42,3 +42,7 @@ pub fn random_usize_in_range(min: usize, max: usize) -> usize {
     rand::thread_rng().gen_range(min, max)
 }
 
+pub fn random_unit_vector(random: &mut Random) -> Vec3 {
+    random_in_unit_sphere(random).unit_vector()
+}
+

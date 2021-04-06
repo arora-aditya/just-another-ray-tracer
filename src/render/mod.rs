@@ -18,6 +18,7 @@ use crate::objects::hittable::Hittable;
 use crate::camera::camera::{self, Camera};
 use crate::textures::texture::Texture;
 use crate::textures::checkers_texture::CheckersTexture;
+use crate::textures::noise::NoiseTexture;
 
 pub fn random_hitable(random: &mut utils::Random) -> HittableList {
     let n: i32 = 500;
@@ -115,6 +116,28 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList {
     };
 }
 
+fn two_spheres() -> HittableList {
+    let checker = Rc::new(CheckersTexture::new(Color3::new(0.2, 0.3, 0.1), Color3::new(0.9, 0.9, 0.9)));
+    let mut world: Vec<Rc<dyn hittable::Hittable>> = std::vec::Vec::new();
+    world.push(Rc::new(Sphere::new(vec3::new(0.0, -10.0, 0.0), 10.0, Box::new(LambertMaterial::new_from_texture(checker.clone())))));
+    world.push(Rc::new(Sphere::new(vec3::new(0.0, 10.0, 0.0), 10.0, Box::new(LambertMaterial::new_from_texture(checker.clone())))));
+
+    return HittableList {
+        hitables: world
+    };
+}
+
+fn perlin_spheres() -> HittableList {
+    let mut world: Vec<Rc<dyn hittable::Hittable>> = std::vec::Vec::new();
+    let pertext = Rc::new(NoiseTexture::new(4.0));
+    world.push(Rc::new(Sphere::new(vec3::new(0.0, -1000.0, 0.0), 1000.0, Box::new(LambertMaterial::new_from_texture(pertext.clone())))));
+    world.push(Rc::new(Sphere::new(vec3::new(0.0, 2.0, 0.0), 2.0, Box::new(LambertMaterial::new_from_texture(pertext.clone())))));
+
+    return HittableList {
+        hitables: world
+    };
+}
+
 pub fn book_cover(){
     pub fn random_in_unit_sphere(random: &mut utils::Random) -> Vec3 {
         let mut p: Vec3 = Default::default();
@@ -149,24 +172,88 @@ pub fn book_cover(){
     
     let mut writer = io::BufWriter::new(io::stdout());
 
-    let nx: i32 = 500;
-    let ny: i32 = 250;
-    let ns: i32 = 100;
+    let mut nx: i32 = 200;
+    let mut ny: i32 = 100;
+    let mut ns: i32;
+    let mut vfov: f32;
+    let mut aperture: f32;
+    let mut lookfrom: Vec3;
+    let mut lookat: Vec3;
+    let mut dist_to_focus: f32;
+    let mut aperture: f32;
+    let mut background: Vec3;
     writer.write_all(format!("P3\n{} {}\n255\n", nx, ny).as_bytes()).unwrap();
     
     let mut random: utils::Random = Default::default();
     let r: f32 = (std::f32::consts::PI/4.0).cos();
-    let hitable = random_hitable(&mut random);
     
-    let lookfrom: Vec3 = vec3::new(13.0, 2.0, 3.0);
-    let lookat: Vec3 = vec3::new(0.0,0.0,0.0);
-    let dist_to_focus:f32 = 10.0;
-    let aperture: f32 = 0.1;
+    let hitable;
+    let scene = 1;
+    match scene {
+        0 => { 
+            hitable = two_spheres();
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+        1 => { 
+            hitable = perlin_spheres();
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+        2 => { 
+            hitable = random_hitable(&mut random);
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+        3 => { 
+            hitable = random_hitable(&mut random);
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+        _ => {
+            hitable = random_hitable(&mut random);
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+    };
+    
+
+
     let cam: Camera = Camera::new(
             lookfrom, 
             lookat, 
-            vec3::new(0.0,1.0,0.0), 
-            20.0, 
+            background, 
+            vfov, 
             nx as f32/ny as f32, 
             aperture, 
             dist_to_focus,

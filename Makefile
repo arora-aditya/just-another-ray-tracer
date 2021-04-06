@@ -33,7 +33,7 @@ run: build
 	./target/debug/ray-tracing-in-a-weekend
 
 tofile: build
-	./target/debug/ray-tracing-in-a-weekend > outputs/the_next/02_moving_sphere_with_checkers_hq.ppm
+	./target/debug/ray-tracing-in-a-weekend > outputs/the_next/04_two_perlin_spheres_hq.ppm
 
 test: build
 	@$(CARGO) test

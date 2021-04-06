@@ -1,24 +1,31 @@
 use std::fmt;
 
-use crate::tracer::vec3;
+use crate::tracer::vec3::Vec3;
 
 #[derive(Copy, Clone)]
 pub struct Ray {
-    pub a: vec3::Vec3,
-    pub b: vec3::Vec3,
+    pub a: Vec3,
+    pub b: Vec3,
     pub _time: f32,
 }
 
 impl Ray {
-    pub fn origin(&self) -> vec3::Vec3 {
+    pub fn new(origin: Vec3, dir: Vec3, time: f32) -> Ray {
+       Ray {
+           a: origin,
+           b: dir,
+           _time: time,
+       }
+   }
+    pub fn origin(&self) -> Vec3 {
         self.a
     }
     
-    pub fn direction(&self) -> vec3::Vec3 {
+    pub fn direction(&self) -> Vec3 {
         self.b
     }
     
-    pub fn point_at_parameter(&self, t: f32) -> vec3::Vec3 {
+    pub fn point_at_parameter(&self, t: f32) -> Vec3 {
         self.a + self.b*t
     }
     
@@ -47,10 +54,10 @@ mod test {
     fn point_at_parameter_test() {
         assert_eq!(
             Ray {
-                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
-                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+                a: Vec3{e: [1.0, 0.0, 2.0]},
+                b: Vec3{e: [4.0, 5.0, 6.0]},
             }.point_at_parameter(4.0),
-            vec3::Vec3{e: [17.0, 20.0, 26.0]}
+            Vec3{e: [17.0, 20.0, 26.0]}
         );
     }
     
@@ -58,10 +65,10 @@ mod test {
     fn origin_test() {
         assert_eq!(
             Ray {
-                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
-                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+                a: Vec3{e: [1.0, 0.0, 2.0]},
+                b: Vec3{e: [4.0, 5.0, 6.0]},
             }.origin(),
-            vec3::Vec3{e: [1.0, 0.0, 2.0]}
+            Vec3{e: [1.0, 0.0, 2.0]}
         );
     }
     
@@ -69,10 +76,10 @@ mod test {
     fn direction_test() {
         assert_eq!(
             Ray {
-                a: vec3::Vec3{e: [1.0, 0.0, 2.0]},
-                b: vec3::Vec3{e: [4.0, 5.0, 6.0]},
+                a: Vec3{e: [1.0, 0.0, 2.0]},
+                b: Vec3{e: [4.0, 5.0, 6.0]},
             }.direction(),
-            vec3::Vec3{e: [4.0, 5.0, 6.0]}
+            Vec3{e: [4.0, 5.0, 6.0]}
         );
     }
 }

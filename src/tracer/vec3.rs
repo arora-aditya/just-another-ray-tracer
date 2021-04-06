@@ -10,6 +10,8 @@ use std::ops::Neg;
 use std::ops::Div;
 use std::ops::DivAssign;
 use std::fmt;
+use crate::utils::{self, Random};
+
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
@@ -22,6 +24,12 @@ impl Default for Vec3 {
             e: [1.0, 1.0, 1.0],
         }
     }
+}
+
+pub enum RandomVectorType {
+    InUnitDisk,
+    InUnitSphere,
+    Unit,
 }
 
 impl Vec3 {
@@ -49,6 +57,15 @@ impl Vec3 {
 
     pub fn neg(&self) -> Vec3 {
         return Vec3 { e: [-1.0 * self.e[0], -1.0 * self.e[1], -1.0 * self.e[2]] };
+    }
+    
+    pub fn random(vector_type: RandomVectorType) -> Vec3 {
+        let mut random: utils::Random = Default::default();
+        match vector_type {
+            RandomVectorType::InUnitDisk => utils::random_in_unit_disk(&mut random),
+            RandomVectorType::InUnitSphere => utils::random_in_unit_sphere(&mut random),
+            RandomVectorType::Unit => utils::random_unit_vector(&mut random),
+        }
     }
     
     pub fn near_zero(&self) -> bool {
