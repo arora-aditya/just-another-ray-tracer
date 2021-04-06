@@ -88,7 +88,7 @@ pub fn random_hitable(random: &mut utils::Random) -> HittableList {
     )));
     list.push(Rc::new(Sphere::new(
         vec3::new(4.0, 1.0, 0.0), 
-        0.2,
+        1.0,
         Box::new(MetalMaterial{
             albedo: Color3{
                         r: 0.7, 
