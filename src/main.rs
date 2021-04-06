@@ -4,6 +4,7 @@ mod objects;
 mod material;
 mod camera;
 mod utils;
+mod textures;
 
 
 

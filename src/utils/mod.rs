@@ -38,3 +38,7 @@ pub fn random_in_unit_disk(random: &mut Random) -> Vec3 {
     p
 }
 
+pub fn random_usize_in_range(min: usize, max: usize) -> usize {
+    rand::thread_rng().gen_range(min, max)
+}
+

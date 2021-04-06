@@ -1,11 +1,11 @@
 COLOR ?= always # Valid COLOR options: {always, auto, never}
 CARGO = cargo --color $(COLOR)
-SOURCES := $(patsubst %.ppm,%.png,$(wildcard outputs/*.ppm))
+SOURCES := $(patsubst %.ppm,%.png,$(wildcard outputs/*/*.ppm))
 .DEFAULT_GOAL := help
 
 .PHONY: all bench build check clean doc install publish run test update help
 
-all: run $(SOURCES)
+all: $(SOURCES)
 	echo $(SOURCES)
 
 bench:
@@ -33,7 +33,7 @@ run: build
 	./target/debug/ray-tracing-in-a-weekend
 
 tofile: build
-	./target/debug/ray-tracing-in-a-weekend > outputs/the_next/01_moving_sphere_hq.ppm
+	./target/debug/ray-tracing-in-a-weekend > outputs/the_next/02_moving_sphere_with_checkers_hq.ppm
 
 test: build
 	@$(CARGO) test

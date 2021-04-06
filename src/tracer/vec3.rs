@@ -25,6 +25,8 @@ impl Default for Vec3 {
 }
 
 impl Vec3 {
+    pub const TOL: f64 = 1e-8;
+
     pub fn x(&self) -> f32 {
         self.e[0]
     }
@@ -49,6 +51,10 @@ impl Vec3 {
         return Vec3 { e: [-1.0 * self.e[0], -1.0 * self.e[1], -1.0 * self.e[2]] };
     }
     
+    pub fn near_zero(&self) -> bool {
+        f64::abs(self.x().into()) < Self::TOL && f64::abs(self.y().into()) < Self::TOL && f64::abs(self.z().into()) < Self::TOL
+    }
+    
     pub fn make_unit_vector(&mut self){
         let k: f32 = (self.e[0]*self.e[0] + self.e[1]*self.e[1] + self.e[2]*self.e[2]).sqrt();
         println!("{}", k);
@@ -70,7 +76,7 @@ impl Vec3 {
     }
 }
 
-pub fn new(x: i32, y: i32, z: i32) -> Vec3 {
+pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
     Vec3{e: [x as f32, y as f32, z as f32]}
 }
 

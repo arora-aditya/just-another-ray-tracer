@@ -17,6 +17,14 @@ fn color_elem_to_int(f: f32) -> i32 {
 }
 
 impl Color3 {
+    pub fn new (r: f32, g: f32, b: f32) -> Color3 {
+        Color3{
+            r: r,
+            g: g,
+            b: b,
+        }
+    }
+
     pub fn ir(&self) -> i32 {
         color_elem_to_int(self.r)
     }
