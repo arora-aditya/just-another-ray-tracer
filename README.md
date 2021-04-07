@@ -10,7 +10,9 @@ following [this guide](https://raytracing.github.io/) but in Rust to level up
 
 ![2 spheres](./outputs/the_next/03_two_checkers_spheres_hq.png)
 
-![2 spheres](./outputs/the_next/04_two_perlin_spheres.png)
+
+| ![2 spheres](./outputs/the_next/04_two_perlin_spheres.png) | ![Earth](./outputs/the_next/05_earth.png) |
+|------------------------------------------------------------|-------------------------------------------|
 
 #### Pending further improvements
 - [ ] Multi threading

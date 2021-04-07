@@ -1,7 +1,7 @@
 use std::io;
 use std::io::Write;
 use std::rc::Rc;
-
+use std::path::Path;
 use crate::utils;
 
 use crate::tracer::ray::{self, Ray};
@@ -19,6 +19,7 @@ use crate::camera::camera::{self, Camera};
 use crate::textures::texture::Texture;
 use crate::textures::checkers_texture::CheckersTexture;
 use crate::textures::noise::NoiseTexture;
+use crate::textures::image::ImageTexture;
 
 pub fn random_hitable(random: &mut utils::Random) -> HittableList {
     let n: i32 = 500;
@@ -127,6 +128,19 @@ fn two_spheres() -> HittableList {
     };
 }
 
+fn earth() -> HittableList {
+    let mut world: Vec<Rc<dyn hittable::Hittable>> = std::vec::Vec::new();
+    let earth_texture = Rc::new(ImageTexture::new(&Path::new("./assets").join("earthmap.jpg")));
+    let earth_surface = Box::new(LambertMaterial::new_from_texture(earth_texture));
+    let globe = Rc::new(Sphere::new(vec3::new(0.0, 0.0, 0.0), 2.0, earth_surface));
+
+    world.push(globe);
+
+    return HittableList {
+        hitables: world
+    };
+}
+
 fn perlin_spheres() -> HittableList {
     let mut world: Vec<Rc<dyn hittable::Hittable>> = std::vec::Vec::new();
     let pertext = Rc::new(NoiseTexture::new(4.0));
@@ -188,7 +202,7 @@ pub fn book_cover(){
     let r: f32 = (std::f32::consts::PI/4.0).cos();
     
     let hitable;
-    let scene = 1;
+    let scene = 4;
     match scene {
         0 => { 
             hitable = two_spheres();
@@ -225,6 +239,17 @@ pub fn book_cover(){
         }
         3 => { 
             hitable = random_hitable(&mut random);
+            ns = 100;
+            vfov = 20.0;
+            aperture = 0.0;
+            lookfrom = vec3::new(13.0, 2.0, 3.0);
+            lookat = vec3::new(0.0,0.0,0.0);
+            background = vec3::new(0.0,1.0,0.0);
+            dist_to_focus = 10.0;
+            aperture = 0.1;
+        }
+        4 => { 
+            hitable = earth();
             ns = 100;
             vfov = 20.0;
             aperture = 0.0;

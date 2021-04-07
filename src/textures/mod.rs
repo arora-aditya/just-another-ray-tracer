@@ -8,3 +8,5 @@ pub mod checkers_texture;
 pub mod perlin;
 #[path = "noise.rs"]
 pub mod noise;
+#[path = "image.rs"]
+pub mod image;
